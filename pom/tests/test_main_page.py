@@ -1,4 +1,4 @@
-from playwright.sync_api import Page, TimeoutError
+from playwright.sync_api import Page
 from pom.pages.home_page import HomePage
 from pom.pages.product_page import ProductPage
 
@@ -15,11 +15,7 @@ def test_product_title_price_same_in_details(page: Page):
     product_price_home_page = home_page.get_frist_product_price()
     home_page.go_to_first_product_page()
     # handling add in iframe
-    try:
-        page.frame_locator("iframe#aswift_2").locator("#dismiss-button").click(timeout=2000)
-    except TimeoutError:
-        print('Add did not appear')
-        pass
+    # home_page.close_iframe_ad()
     product_page = ProductPage(page)
     product_title_product_page = product_page.get_product_title()
     product_price_product_price = product_page.get_product_price()

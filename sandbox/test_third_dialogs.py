@@ -32,4 +32,3 @@ def test_dandle_dialogs_page_expect_event(page: Page):
         page.get_by_role("link", name="Add to cart").click()
     dialog.value.accept()
     page.locator('#cartur').click()
-
