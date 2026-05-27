@@ -22,7 +22,7 @@ class HomePage(BasePage):
     def get_first_product_title(self) -> str:
         return self.get_text(self.product_names_list.first)
 
-    def get_frist_product_price(self) -> str:
+    def get_first_product_price(self) -> str:
         return self.get_text(self.product_price_list.first)
 
     def check_first_product_is_displayed(self):

@@ -6,10 +6,11 @@ class LoginPage(BasePage):
 
     def __init__(self, page):
         super().__init__(page)
+        # === Page path ===
+        self.path = 'login'
         # === Default credentials ===
         self.default_login = EMAIL_LOGIN
         self.default_password = PASSWORD_LOGIN
-
         # === Locators ===
         self.login_email_field = page.locator('[data-qa="login-email"]').describe('LOGIN PAGE - email field')
         self.login_password_field = page.locator('[data-qa="login-password"]').describe('LOGIN PAGE - password field')
@@ -17,6 +18,7 @@ class LoginPage(BasePage):
         self.signup_email_field = page.locator('[data-qa="signup-email"]').describe('LOGIN PAGE - sign up email field')
         self.login_button = page.locator('[data-qa="login-button"]').describe('LOGIN PAGE - login button')
         self.signup_button = page.locator('[data-qa="signup-button"]').describe('LOGIN PAGE - signup button')
+        self.message_under_login_form = page.locator('form[action="/login"] > p')
 
     def check_login_page_is_present(self):
         self.log.info('Check is email field visible')
@@ -37,4 +39,8 @@ class LoginPage(BasePage):
         self.fill(self.login_password_field, password)
         self.click(self.login_button)
 
-
+    def check_invalid_login_message(self):
+        self.log.info('Check is invalid login message visible')
+        expect(self.message_under_login_form).to_be_visible()
+        self.log.info('Check is invalid login message == "Your email or password is incorrect!"')
+        expect(self.message_under_login_form).to_have_text('Your email or password is incorrect!')

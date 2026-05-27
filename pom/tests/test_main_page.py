@@ -12,10 +12,8 @@ def test_product_title_price_same_in_details(page: Page):
     home_page = HomePage(page)
     home_page.navigate()
     product_title_home_page = home_page.get_first_product_title()
-    product_price_home_page = home_page.get_frist_product_price()
+    product_price_home_page = home_page.get_first_product_price()
     home_page.go_to_first_product_page()
-    # handling add in iframe
-    # home_page.close_iframe_ad()
     product_page = ProductPage(page)
     product_title_product_page = product_page.get_product_title()
     product_price_product_price = product_page.get_product_price()
