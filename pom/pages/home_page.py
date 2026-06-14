@@ -11,8 +11,6 @@ class HomePage(BasePage):
         self.product_cards_list = page.locator("div.features_items > div.col-sm-4").describe('HOME PAGE - Product card')
         self.product_names_list = page.locator('div.productinfo > p').describe('HOME PAGE - Product name')
         self.product_price_list = page.locator('div.productinfo > h2').describe('HOME PAGE - Product price')
-        self.product_overlay_list = (page.locator("div.features_items > div.col-sm-4 .product-overlay").
-                                     describe('HOME PAGE - Product overlay'))
         self.product_overlay_add_to_cart_list = (page.locator("div.features_items > div.col-sm-4 .product-overlay .add-to-cart").
                                                  describe('HOME PAGE - Add to cart button in product overlay'))
         self.modal_success = page.locator('#cartModal').describe('HOME PAGE - Success modal')

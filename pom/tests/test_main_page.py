@@ -34,7 +34,7 @@ def test_add_item_to_cart_and_continue_shopping(page):
     home_page.check_success_modal_disappeared()
     expect(page).to_have_url(home_page.BASE_URL)
 
-@pytest.mark.parametrize('number', [randint(1, 10), randint(1, 10), randint(1, 10)])
+@pytest.mark.parametrize('number', [1,2,3])
 def test_add_item_to_cart_and_go_to_cart(page, number):
     home_page = HomePage(page)
     home_page.navigate()
@@ -49,5 +49,20 @@ def test_add_item_to_cart_and_go_to_cart(page, number):
     cart_page.check_no_empty_cart_text()
     assert product_name_home_page == product_name_cart_page, 'Product name from Home Page != product name from cart'
 
+def test_add_two_items_to_cart_and_go_to_cart(page):
+    home_page = HomePage(page)
+    home_page.navigate()
 
+    home_page.add_product_to_cart(item_number=0)
+    home_page.click_continue_shopping_in_success_modal()
+
+    home_page.add_product_to_cart(item_number=1)
+    home_page.go_to_cart_through_success_modal()
+
+    cart_page = CartPage(page)
+    cart_page.check_no_empty_cart_text()
+    unique_number_of_product_in_cart = cart_page.get_number_of_unique_products_in_cart()
+
+    assert unique_number_of_product_in_cart == 2, \
+        f'Number of unique product in cart == {unique_number_of_product_in_cart}'
 

@@ -44,3 +44,8 @@ class LoginPage(BasePage):
         expect(self.message_under_login_form).to_be_visible()
         self.log.info('Check is invalid login message == "Your email or password is incorrect!"')
         expect(self.message_under_login_form).to_have_text('Your email or password is incorrect!')
+
+    def sign_up_fill_form_and_go_to_create_account(self, name: str, email: str):
+        self.fill(self.signup_name_field, name)
+        self.fill(self.signup_email_field, email)
+        self.click(self.signup_button)

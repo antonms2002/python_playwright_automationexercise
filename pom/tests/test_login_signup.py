@@ -1,5 +1,8 @@
+from faker import Faker
+
 from pom.pages.home_page import HomePage
 from pom.pages.login_page import LoginPage
+from pom.pages.sign_up_form_page import SignUpForm
 
 def test_login(page):
     home_page = HomePage(page)
@@ -15,3 +18,17 @@ def test_login_invalid_creds(page, fake):
     login_page.navigate(path=login_page.path)
     login_page.login(login=fake.email(), password=fake.password())
     login_page.check_invalid_login_message()
+
+def test_sign_up_valid(page, fake: Faker):
+    login_page = LoginPage(page)
+    login_page.navigate(path=login_page.path)
+    login_page.sign_up_fill_form_and_go_to_create_account(name=fake.first_name(), email=fake.email())
+
+    sign_up_form = SignUpForm(page)
+    sign_up_form.sign_up(password=fake.password(), first_name=fake.first_name(), last_name=fake.last_name(),
+                         address=fake.address(), state=fake.state(), city=fake.city(), zipcode=fake.zipcode(),
+                         mobile_number=fake.phone_number())
+    #sign_up_form.navbar.check_is_logout_link_displayed()
+
+
+
