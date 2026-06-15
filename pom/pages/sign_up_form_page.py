@@ -1,21 +1,19 @@
 from typing import Literal
-
 from playwright.sync_api import Page
 from playwright.sync_api import expect
 from .base_page import BasePage
 from config import SIGN_UP_PATH
+from urllib.parse import parse_qs
 
 class SignUpForm(BasePage):
 
     def __init__(self, page: Page):
         super().__init__(page)
-        # -- Page --
-        self.page = page
         # -- Page path
         self.path = SIGN_UP_PATH
         # -- Locators --
         self.name_field = page.locator('[data-qa="name"]')
-        self.password_filed = page.locator('[data-qa="password"]')
+        self.password_field = page.locator('[data-qa="password"]')
         self.day_date_birth_select = page.locator('[data-qa="days"]')
         self.month_date_birth_select = page.locator('[data-qa="months"]')
         self.year_date_birth_select = page.locator('[data-qa="years"]')
@@ -29,6 +27,8 @@ class SignUpForm(BasePage):
         self.zipcode_filed = page.locator('[data-qa="zipcode"]')
         self.mobile_number_field = page.locator('[data-qa="mobile_number"]')
         self.create_account_button = page.locator('[data-qa="create-account"]')
+        self.account_created_tittle = page.locator('[data-qa=account-created]')
+        self.continue_button = page.locator('[data-qa=continue-button]')
 
     def sign_up(self,
                 password: str, first_name: str, last_name: str, address: str,
@@ -36,7 +36,7 @@ class SignUpForm(BasePage):
                 country: Literal['Canada', 'India', 'United States'] = 'India',
                 day_of_birth: str = '1', month: str = 'March', year: str = '1999',
                 company: str = None):
-        self.fill(self.password_filed, password)
+        self.fill(self.password_field, password)
         self.fill(self.first_name_filed, first_name)
         self.fill(self.last_name_field, last_name)
         self.fill(self.address_field, address)
@@ -53,10 +53,14 @@ class SignUpForm(BasePage):
         with self.page.expect_request('**/signup**') as request:
             self.click(self.create_account_button)
         request_body = request.value.post_data
-        print(type(request_body))
-        self.log.info(request_body)
-        #assert password in request_body
+        request_body_dict = {k:v[0] for k,v in parse_qs(request_body).items()}
+        return request_body_dict
 
+    def check_account_created_tittle(self):
+        expect(self.account_created_tittle).to_have_text('Account Created!')
+
+    def click_continue_button(self):
+        self.click(self.continue_button)
 
 
 
