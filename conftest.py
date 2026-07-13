@@ -1,8 +1,9 @@
-from playwright.sync_api import BrowserContext, Browser, Page, Cookie
+from playwright.sync_api import BrowserContext, Browser, Page
 import pytest
 import logging
 from faker import Faker
 from pom.pages.login_page import LoginPage
+from pom.utils.actions import sign_up_new_user_and_save_storage_state
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
 
@@ -25,8 +26,8 @@ def fake():
     return fake
 
 @pytest.fixture(scope="session")
-def auth_cookies(browser: Browser):
-    """auth_cookies fixture returns cookies of authenticated user. Login performs once in session"""
+def auth_cookies_default_user(browser: Browser):
+    """auth_cookies_default_user fixture returns cookies of DEFAULT authenticated user. Login performs ONCE in session"""
     context: BrowserContext = browser.new_context()
     page: Page = context.new_page()
     login_page = LoginPage(page)
@@ -34,9 +35,24 @@ def auth_cookies(browser: Browser):
     login_page.login(login=login_page.default_login, password=login_page.default_password)
     login_page.navbar.check_is_logout_link_displayed()
     cookies = context.cookies()
-    page.close()
     context.close()
     return cookies
+
+@pytest.fixture(scope="function")
+def authed_page_new_user(browser: Browser, fake):
+    # Creating context and page for func in utils
+    context = browser.new_context()
+    page = context.new_page()
+
+    sign_up_new_user_and_save_storage_state(page, fake)
+    context.close()
+
+    context = browser.new_context(storage_state='state.json')
+    page = context.new_page()
+
+    yield page
+
+    context.close()
 
 # @pytest.fixture(scope='session')
 # def context_auth(browser: Browser):
